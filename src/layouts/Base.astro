@@ -1,0 +1,53 @@
+---
+import '../styles/global.css';
+import newsreader from '@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url';
+import sourceSerif from '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2?url';
+import { useT, tl, type Lang } from '../i18n/ui';
+import { lab } from '../data/lab';
+interface Props { lang: Lang; title?: string; description?: string; path?: string }
+const { lang, title, description = tl(lang, lab.mission), path = '/' } = Astro.props;
+const t = useT(lang);
+const nav = [['nav.publications', '#publications'], ['nav.people', '#people'], ['nav.news', '#news']] as const;
+const here = (href: string) => path === href;
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{title ? `${title} · ${tl(lang, lab.name)}` : `${tl(lang, lab.name)} — ${tl(lang, lab.full)}`}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={new URL(path, Astro.site).href} />
+  <link rel="preload" href={newsreader} as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href={sourceSerif} as="font" type="font/woff2" crossorigin />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script is:inline>(function(){var q=new URLSearchParams(location.search).get('theme');var s=q||localStorage.getItem('theme');if(s==='dark'||(!s&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')})()</script>
+</head>
+<body class="min-h-dvh flex flex-col">
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:p-3 focus:bg-accent focus:text-paper">{t('skip')}</a>
+  <header class="mx-auto w-full max-w-[1080px] px-6 pt-8">
+    <div class="flex flex-wrap items-end justify-between gap-4 pb-4">
+      <a href="/" class="group">
+        <span class="block font-display text-[28px] leading-none tracking-tight">{tl(lang, lab.name)}</span>
+        <span class="block meta mt-1.5">{tl(lang, lab.dept)}</span>
+      </a>
+      <div class="flex items-center gap-2 font-sans text-[13px]">
+        <a href="https://themes.formchime.com/themes/lab-site/" class="inline-flex items-center min-h-11 px-2 text-ink-2 hover:text-accent">Lite · Full theme →</a>
+        <button type="button" aria-label={t('theme.toggle')} class="ml-1 size-11 grid place-items-center rounded-full border border-line hover:border-ink-2" onclick="var d=document.documentElement.classList.toggle('dark');localStorage.setItem('theme',d?'dark':'light')">
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16"><path d="M13.5 10.2A6 6 0 0 1 5.8 2.5a6 6 0 1 0 7.7 7.7z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav aria-label="Main" class="rule-double border-b border-line flex flex-wrap gap-x-5 font-sans text-[14px]">
+      {nav.map(([k, href]) => <a href={href} aria-current={here(href) ? 'page' : undefined} class:list={['inline-flex items-center min-h-11', here(href) ? 'text-ink border-b-2 border-accent' : 'text-ink-2 hover:text-accent']}>{t(k)}</a>)}
+    </nav>
+  </header>
+  <main id="main" class="flex-1"><slot /></main>
+  <footer class="mx-auto w-full max-w-[1080px] px-6 mt-24">
+    <div class="border-t border-line py-8 grid md:grid-cols-12 gap-4 font-sans text-[13px] text-ink-2">
+      <p class="md:col-span-3">© 2026 {tl(lang, lab.name)}</p>
+      <p class="md:col-span-6">{tl(lang, lab.address)} · <a class="link inline-block py-3" href={`mailto:${lab.email}`}>{lab.email}</a></p>
+      <p class="md:col-span-3 md:text-right">{t('footer.note')} <a class="link" href="https://themes.formchime.com/themes/lab-site/">Full version: publications, people, projects &amp; grants, recruiting, news, 3 languages →</a></p>
+    </div>
+  </footer>
+</body>
+</html>

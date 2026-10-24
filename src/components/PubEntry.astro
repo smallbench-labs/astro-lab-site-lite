@@ -1,0 +1,27 @@
+---
+import type { Pub } from '../lib/pubs';
+import { useT, type Lang } from '../i18n/ui';
+interface Props { pub: Pub; lang: Lang; showYear?: boolean }
+const { pub, lang, showYear = true } = Astro.props;
+const t = useT(lang);
+---
+<article class="grid sm:grid-cols-[88px_1fr] gap-x-6 gap-y-1 py-6 border-b border-line" id={pub.key}>
+  <div class="meta pt-1">{showYear && <span class="font-mono not-italic tracking-normal [font-variant-caps:normal] text-[13px]">{pub.year}</span>}</div>
+  <div>
+    <h3 class="text-[1.3rem] leading-snug">{pub.title}</h3>
+    <p class="mt-1.5 text-[15px] leading-relaxed text-ink-2 [text-wrap:balance]">
+      {pub.authors.map((a, i) => <>{i > 0 && ', '}<span class:list={[a.member && 'text-ink underline decoration-accent decoration-1 underline-offset-[3px]']}>{a.name}</span></>)}
+    </p>
+    <p class="mt-1 text-[15px] italic">{pub.type === 'phdthesis' ? `${t('pubs.thesis')}, ` : ''}{pub.venue}</p>
+    <div class="mt-3 flex flex-wrap items-center gap-x-4 font-sans text-[13px]">
+      {pub.award && <span class="text-cite border border-cite px-1.5 py-px rounded-[3px] font-medium">★ {pub.award}</span>}
+      {pub.pdf && <a class="link inline-flex items-center min-h-11" href={pub.pdf}>{t('pubs.pdf')}</a>}
+      {pub.code && <a class="link inline-flex items-center min-h-11" href={pub.code}>{t('pubs.code')}</a>}
+      {pub.doi && <a class="link inline-flex items-center justify-center min-h-11 min-w-6" href={`https://doi.org/${pub.doi}`}>{t('pubs.doi')}</a>}
+      <details class="bib basis-full sm:basis-auto">
+        <summary class="link inline-flex items-center min-h-11">{t('pubs.bibtex')}</summary>
+        <pre tabindex="0" role="region" aria-label={`BibTeX ${pub.key}`} class="mt-3 p-4 bg-paper-2 border border-line text-[12px] leading-relaxed font-mono overflow-x-auto whitespace-pre"><code>{pub.raw}</code></pre>
+      </details>
+    </div>
+  </div>
+</article>

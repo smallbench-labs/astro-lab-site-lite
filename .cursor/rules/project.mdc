@@ -1,0 +1,11 @@
+---
+description: Astro Lab Site conventions
+globs: ["src/**"]
+alwaysApply: true
+---
+- Read AGENTS.md first. Astro 7 + Tailwind 4, static, zero framework JS.
+- Publications come only from src/data/publications.bib; never hand-write publication HTML.
+- People/projects/grants/positions live in src/data/lab.ts with { en, ja?, 'zh-TW'? } strings.
+- Use token utilities (bg-paper, text-ink, text-ink-2, border-line, text-accent, text-cite, bg-highlight); no raw hex.
+- Keep the 3/9 marginalia grid and `.meta` small-caps labels.
+- Run `npx astro check` and `npm run build` before finishing.
