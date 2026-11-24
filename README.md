@@ -1,4 +1,6 @@
-Full version: themes.formchime.com
+**[Full version US$39](https://themes.formchime.com/themes/lab-site/)**
+
+![Astro Lab Site Lite home page](shots/home.png)
 
 # Astro Lab Site Lite
 
